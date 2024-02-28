@@ -1,0 +1,6 @@
+TCNT_Driver.c:49:6:TCNT_Driver_Init	16	static
+TCNT_Driver.c:83:6:TCNT_Driver_SetPeriod	16	static
+TCNT_Driver.c:87:6:TCNT_Driver_SetPrescale	16	static
+TCNT_Driver.c:91:6:TCNT_Driver_Start	16	static
+TCNT_Driver.c:95:6:TCNT_Driver_ClearStatus	16	static
+TCNT_Driver.c:99:7:TCNT_Driver_GetStatus	16	static

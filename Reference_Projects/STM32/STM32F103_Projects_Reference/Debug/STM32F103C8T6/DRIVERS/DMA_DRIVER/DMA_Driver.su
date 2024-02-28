@@ -1,0 +1,4 @@
+DMA_Driver.c:15:6:DMA_Driver_Init	24	static
+DMA_Driver.c:67:6:DMA_Driver_SetBuffers	24	static
+DMA_Driver.c:90:6:DMA_Driver_Start	16	static
+DMA_Driver.c:96:6:DMA_Driver_Stop	16	static
