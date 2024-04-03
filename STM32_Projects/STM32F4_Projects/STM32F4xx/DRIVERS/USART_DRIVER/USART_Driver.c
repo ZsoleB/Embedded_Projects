@@ -75,7 +75,7 @@ void  USART_Driver_Set_Baudrate(uint8 USART_setup_nr)
 			working_freq = (uint32)(45000000);
 		}
 
-		tmp = (((25*(working_freq))/(USART_SETUP[USART_setup_nr].USART_Baudrate))/4);
+		tmp = (((25*(working_freq))/(4*USART_SETUP[USART_setup_nr].USART_Baudrate)));
 	}
 	else if(USART_SETUP[USART_setup_nr].USART_Oversampling_mode == USART_DRIVER_OVER8)
 	{
@@ -89,15 +89,21 @@ void  USART_Driver_Set_Baudrate(uint8 USART_setup_nr)
 			working_freq = (uint32)(45000000);
 		}
 
-		tmp = (((25*(working_freq))/(USART_SETUP[USART_setup_nr].USART_Baudrate))/2);
+		tmp = (((25*(working_freq))/(2*USART_SETUP[USART_setup_nr].USART_Baudrate)));
 	}
 
-	//to double precision
+	/*	1 - Multiply by 100 in order to shift the fractional number up.
+	 	2 - Divide the new number to get the whole part of the number */
 	MANTISA = ((tmp/100)<<4);
-	//truchate the fraction, move the integer left to left space for the new fraction
+	/*	3 - Remove the whole part from the temporary number */
 	tmp = tmp - ((MANTISA>>4)*100);
-	//to get the fraction shift back the last value and multiply back,
-	// then save the difference got by subtracting from the old one
+
+	/*4 - Scale the result of the Faction result to the available bit range (((FRACTION*MAX_VALUE_OF_RANGE)+ROUND_UP_VALUE)&MAXIMUM_NUMBER_OF_THE_ORIGINAL_NUMBER)
+	  5 - Multiply with the oversampling value, to scale to the available bit range (4 or 3). This means to multiply with 16 or with 8, the maximum available number
+	  6 - Add 50 for rounding up
+	  7 - divide by 100 to complete the scaling.
+	*/
+
 	if(USART_SETUP[USART_setup_nr].USART_Oversampling_mode == USART_DRIVER_OVER16)
 	{
 		FRACTION = ((((tmp*16)+50)/100)&((uint8_t)0x0F));
@@ -106,9 +112,7 @@ void  USART_Driver_Set_Baudrate(uint8 USART_setup_nr)
 	{
 		FRACTION = ((((tmp*8)+50)/100)&((uint8_t)0x07));
 	}
-	//\100 with the multiplication at the begining the value had been modified, it had to be turned back
-	//+50 is used for rounding up
-	//Multiply with the available maximum value of the fraction part of the BRR
+
 	result = MANTISA|FRACTION;
 
 	USART_SETUP[USART_setup_nr].USART_Instance->BRR = result;
@@ -124,8 +128,8 @@ uint8 USART_Driver_Receive_Char(uint8 USART_setup_nr)
 
 void USART_Driver_Send_Char(uint8 USART_setup_nr,uint8 data)
 {
-	USART_SETUP[USART_setup_nr].USART_Instance->DR = data;
 	while((USART_Driver_GetStatus(USART_setup_nr,USART_Driver_TXE))==FAILED);
+	USART_SETUP[USART_setup_nr].USART_Instance->DR = data;
 }
 
 void USART_Driver_Send_Str(uint8 USART_setup_nr,char* Msg)
