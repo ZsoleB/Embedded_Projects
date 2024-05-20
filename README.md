@@ -1,1 +1,1 @@
-# Personal Project for MCAL development for multiple MCUs.
+# MCAL development for multiple MCUs.
