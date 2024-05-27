@@ -13,7 +13,7 @@ void GPIO_Driver_Init()
 {
 	uint8 Port_index = 0x00;
 	uint32 Pin_index = 0x00;
-		
+
 	for(Port_index=0x00;Port_index<GPIO_DRIVER_INSTANCE_NUM;Port_index++)
 	{
 		/*Extract the PORT Associated with the GPIO Driver instance.*/
@@ -25,10 +25,11 @@ void GPIO_Driver_Init()
 			Control, 
 			Write configuration,
 		*/
-		/*GPIO_DRIVER_PORT_REG->PORT_Group[eSelected_Port].GPIO_DRIVER_DIR = (uint32)0x00;
+		GPIO_DRIVER_PORT_REG->PORT_Group[eSelected_Port].GPIO_DRIVER_DIR = (uint32)0x00;
 		GPIO_DRIVER_PORT_REG->PORT_Group[eSelected_Port].GPIO_DRIVER_OUT = (uint32)0x00;
 		GPIO_DRIVER_PORT_REG->PORT_Group[eSelected_Port].GPIO_DRIVER_CTRL = (uint32)0x00;
-		GPIO_DRIVER_PORT_REG->PORT_Group[eSelected_Port].GPIO_DRIVER_WRCONFIG = (uint32)0x00;*/
+		GPIO_DRIVER_PORT_REG->PORT_Group[eSelected_Port].GPIO_DRIVER_WRCONFIG = (uint32)0x00;
+		GPIO_DRIVER_PORT_REG->PORT_Group[eSelected_Port].GPIO_DRIVER_EVCTRL = (uint32)0x00;
 
 		for(Pin_index=0x00;Pin_index<GPIO_SETUP[Port_index].GPIO_Pin_nr;Pin_index++)
 		{
