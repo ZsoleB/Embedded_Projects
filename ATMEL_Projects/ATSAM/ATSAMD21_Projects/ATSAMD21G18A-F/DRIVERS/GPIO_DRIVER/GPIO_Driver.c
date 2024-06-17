@@ -14,6 +14,10 @@ void GPIO_Driver_Init()
 	uint8 Port_index = 0x00;
 	uint32 Pin_index = 0x00;
 		
+	/*Enable the PORT clock on APB bus*/
+	/*To do: after system files added, change magic number to bit position*/
+	SYSTEM_PM_DRIVER_REG->SYSTEM_PM_APBBMASK |= (1<<3);
+
 	for(Port_index=0x00;Port_index<GPIO_DRIVER_INSTANCE_NUM;Port_index++)
 	{
 		/*Extract the PORT Associated with the GPIO Driver instance.*/

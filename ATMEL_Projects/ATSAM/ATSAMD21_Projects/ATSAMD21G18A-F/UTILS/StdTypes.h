@@ -26,11 +26,13 @@
 #define uint16				uint16_t
 #define uint32				uint32_t
 #define uint64				uint64_t
+#define int32               int32_t
 #define MAX8				0xFF
 #define MAX16				0xFFFF
 #define MAX32				0xFFFFFFFF
 #define MIN8				0x00
 #define MIN16				0x0000
 #define MIN32				0x00000000
+#define _UNUSED_(PARAM)     ((void)(PARAM))
 
 #endif /* STDTYPES_H_ */
