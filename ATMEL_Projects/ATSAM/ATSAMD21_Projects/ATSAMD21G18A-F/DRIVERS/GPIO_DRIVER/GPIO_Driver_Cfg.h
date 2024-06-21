@@ -16,14 +16,4 @@
 #define GPIO_DRIVER_GPIOB 				  			NOK
 #define GPIO_DRIVER_INSTANCE_NUM 					((uint32)0x01)
 
-typedef enum
-{
-#if(GPIO_DRIVER_GPIOA == OK)    
-	GPIO_DRIVER_PORTA_INST,
-#endif
-#if(GPIO_DRIVER_GPIOB == OK)
-    GPIO_DRIVER_PORTB_INST
-#endif
-}GPIO_Driver_Config_Instances;
-
 #endif /* GPIO_DRIVER_CFG_H_ */

@@ -143,15 +143,15 @@ typedef enum
 
 typedef enum
 {
-	GPIO_Driver_PF_GPIO,			/*no peripheral functions selected.*/
-	GPIO_Driver_PF_EXTINT,			/*peripheral functions A External interrupts.*/
-	GPIO_Driver_PF_ANALOG,			/*peripheral functions B Analog input.*/
-	GPIO_Driver_PF_SERCOM,			/*peripheral functions C UART.*/
-	GPIO_Driver_PF_SERCOM_ALT,		/*peripheral functions D alternative UART.*/
-	GPIO_Driver_PF_TIMER,			/*peripheral functions E Timer.*/
-	GPIO_Driver_PF_TIMER_ALT,		/*peripheral functions F alternative Timer.*/
-	GPIO_Driver_PF_TIMER_COM,		/*peripheral functions G I2S,JTAG/SWD pins.*/
-	GPIO_Driver_PF_TIMER_GCLK_IO	/*peripheral functions H GCLK_IO (Generic Clock).*/
+	GPIO_Driver_PF_GPIO =			0xFF,		/*no peripheral functions selected.*/
+	GPIO_Driver_PF_EXTINT =			0x00,		/*peripheral functions A External interrupts.*/
+	GPIO_Driver_PF_ANALOG =			0x01,		/*peripheral functions B Analog input.*/
+	GPIO_Driver_PF_SERCOM =			0x02,		/*peripheral functions C UART.*/
+	GPIO_Driver_PF_SERCOM_ALT = 	0x03,		/*peripheral functions D alternative UART.*/
+	GPIO_Driver_PF_TIMER = 			0x04,		/*peripheral functions E Timer.*/
+	GPIO_Driver_PF_TIMER_ALT = 		0x05,		/*peripheral functions F alternative Timer.*/
+	GPIO_Driver_PF_TIMER_COM =		0x06,		/*peripheral functions G I2S,JTAG/SWD pins.*/
+	GPIO_Driver_PF_TIMER_GCLK_IO =	0x07		/*peripheral functions H GCLK_IO (Generic Clock).*/
 }GPIO_Driver_PinConfig;
 
 typedef struct

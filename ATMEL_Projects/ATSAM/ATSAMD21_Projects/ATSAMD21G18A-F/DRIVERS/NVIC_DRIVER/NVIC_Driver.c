@@ -47,7 +47,7 @@ void NVIC_Driver_SetInterrupt(NVIC_DRIVER_IRQNUM_Type IRQChannel, uint8 Preempti
 		uPreviousConfig = SYSTEM_SCB_DRIVER_REG->SYSTEM_SCB_SHP[(((((uint32)(int32)(IRQChannel))&0x0F)-8)>>0x02)] & (~(0xFF<<((((uint32)(int32)(IRQChannel)) & 0x03UL)<<0x03UL)));
 
 		/*Create the new priority for the selected IRQ.*/
-		uNewConfig = uPreviousConfig | (((Preemption_Priority << 0x06UL) && (uint32)0xFFUL)<<((((uint32)(int32)(IRQChannel)) & 0x03UL)<<0x03UL));
+		uNewConfig = uPreviousConfig | (((Preemption_Priority<<0x06UL) & (uint32)0xFFUL)<<((((uint32)(int32)(IRQChannel)) & 0x03UL)<<0x03UL));
 
 		/* Set Priority for Cortex-M  System Interrupts */
 		SYSTEM_SCB_DRIVER_REG->SYSTEM_SCB_SHP[(((((uint32)(int32)(IRQChannel))&0x0F)-8)>>0x02)] = uNewConfig;
@@ -58,7 +58,7 @@ void NVIC_Driver_SetInterrupt(NVIC_DRIVER_IRQNUM_Type IRQChannel, uint8 Preempti
 		uPreviousConfig = SYSTEM_NVIC_DRIVER_REG->SYSTEM_NVIC_IP[(((uint32)(IRQChannel))>>0x02)] & (~(0xFF<<((((uint32)(IRQChannel)) & 0x03UL)<<0x03UL)));
 
 		/*Create the new priority for the selected IRQ.*/
-		uNewConfig = uPreviousConfig | (((Preemption_Priority<<0x06UL) && (uint32)0xFFUL)<<((((uint32)(IRQChannel)) & 0x03UL)<<0x03UL));
+		uNewConfig = uPreviousConfig | (((Preemption_Priority<<0x06UL) & (uint32)0xFFUL)<<((((uint32)(IRQChannel)) & 0x03UL)<<0x03UL));
 
 		/*Set interrupt priority for the NVIC*/
 		SYSTEM_NVIC_DRIVER_REG->SYSTEM_NVIC_IP[(((uint32)(IRQChannel))>>0x02)] = uNewConfig;
