@@ -10,21 +10,21 @@
 
 #include "RegMemmap.h"
 
-#define USART_DRIVER_ASYNCH_COMM			((uint32)(0x00<<0x1C))		/*This bit selects asynchronous communication.*/
+#define USART_DRIVER_ASYNCH_COMM          	((uint32)(0x00<<0x1C))		/*This bit selects asynchronous communication.*/
 #define USART_DRIVER_SYNCH_COMM				((uint32)(0x01<<0x1C))		/*This bit selects synchronous communication.*/
 #define USART_DRIVER_FRAME_FORM_NOPAR		((uint32)(0x00<<0x18))		/*These bits define the frame format with no parity*/
 #define USART_DRIVER_FRAME_FORM_PARITY		((uint32)(0x01<<0x18))		/*These bits define the frame format with parity*/
-#define USART_DRIVER_ONE_STOP_BIT			((uint32)(0x00<<0x06))		/*Stop bit mode, with one stop bit selection*/
-#define USART_DRIVER_TWO_STOP_BITS			((uint32)(0x01<<0x06))		/*Stop bit mode, with two stop bits selection*/
-#define USART_DRIVER_EVEN_PARITY			((uint32)(0x00<<0x0D))		/*Parity mode, with even parity selection*/
-#define USART_DRIVER_ODD_PARITY				((uint32)(0x01<<0x0D))		/*Parity mode, with odd parity selection*/
-#define USART_DRIVER_RXEN					((uint32)(0x01<<0x11))		/*Receiver enable*/
-#define USART_DRIVER_TXEN					((uint32)(0x01<<0x10))		/*Transmitter enable*/
-#define USART_DRIVER_IBON					((uint32)(0x00<<0x02))		/*Immediate Buffer Overflow Notification - controls when the buffer overflow status bit (STATUS.BUFOVF) is asserted when a buffer overflow occurs.*/
-#define USART_DRIVER_EXT_CLOCK				((uint32)(0x00<<0x02))		/*Select the external clock*/
-#define USART_DRIVER_INT_CLOCK				((uint32)(0x01<<0x02))		/*Select the internal clock*/
-#define USART_DRIVER_ENABLE					((uint32)(0x01<<0x01))		/*Enable the USART module*/
-#define USART_DRIVER_SWRESET				((uint32)0x01UL)			/*Writing '1' to this bit resets all registers in the SERCOM, except DBGCTRL, to their initial state, and the SERCOM will be disabled.*/
+#define USART_DRIVER_ONE_STOP_BIT         	((uint32)(0x00<<0x06))		/*Stop bit mode, with one stop bit selection*/
+#define USART_DRIVER_TWO_STOP_BITS        	((uint32)(0x01<<0x06))		/*Stop bit mode, with two stop bits selection*/
+#define USART_DRIVER_EVEN_PARITY          	((uint32)(0x00<<0x0D))		/*Parity mode, with even parity selection*/
+#define USART_DRIVER_ODD_PARITY           	((uint32)(0x01<<0x0D))		/*Parity mode, with odd parity selection*/
+#define USART_DRIVER_RXEN                 	((uint32)(0x01<<0x11))		/*Receiver enable*/
+#define USART_DRIVER_TXEN                 	((uint32)(0x01<<0x10))		/*Transmitter enable*/
+#define USART_DRIVER_IBON                 	((uint32)(0x00<<0x02))		/*Immediate Buffer Overflow Notification - controls when the buffer overflow status bit (STATUS.BUFOVF) is asserted when a buffer overflow occurs.*/
+#define USART_DRIVER_EXT_CLOCK            	((uint32)(0x00<<0x02))		/*Select the external clock*/
+#define USART_DRIVER_INT_CLOCK            	((uint32)(0x01<<0x02))		/*Select the internal clock*/
+#define USART_DRIVER_ENABLE               	((uint32)(0x01<<0x01))		/*Enable the USART module*/
+#define USART_DRIVER_SWRESET              	((uint32)0x01UL)			/*Writing '1' to this bit resets all registers in the SERCOM, except DBGCTRL, to their initial state, and the SERCOM will be disabled.*/
 		
 typedef enum
 {
@@ -57,24 +57,24 @@ typedef enum
 
 typedef enum
 {
-	USART_DRIVER_8_bits = 0x00,						/*8 bit sized character.*/
-	USART_DRIVER_9_bits = 0x01,						/*9 bit sized character.*/
-	USART_DRIVER_5_bits = 0x05,						/*5 bit sized character.*/
-	USART_DRIVER_6_bits = 0x06,						/*6 bit sized character.*/
-	USART_DRIVER_7_bits = 0x07						/*7 bit sized character.*/
+	USART_DRIVER_8_bits = 0x00,						  /*8 bit sized character.*/
+	USART_DRIVER_9_bits = 0x01,						  /*9 bit sized character.*/
+	USART_DRIVER_5_bits = 0x05,						  /*5 bit sized character.*/
+	USART_DRIVER_6_bits = 0x06,						  /*6 bit sized character.*/
+	USART_DRIVER_7_bits = 0x07						  /*7 bit sized character.*/
 }USART_Driver_Characther_Size;
 
 typedef enum
 {
-	USART_DRIVER_PARITY_USE,						/*Parity will be used*/
-	USART_DRIVER_PARITY_NONE						/*Parity will not be used*/
+	USART_DRIVER_PARITY_NONE,						  /*Parity will not be used*/
+	USART_DRIVER_PARITY_USE						      /*Parity will be used*/
 }USART_Driver_ParityEnable_Config;
 
 typedef enum
 {
-	USART_DRIVER_PARITY_DEFAULT,					/*Parity mode selection can be ignored*/
-	USART_DRIVER_PARITY_EVEN,						/*Parity mode selection set to even*/
-	USART_DRIVER_PARITY_ODD							/*Parity mode selection set to odd*/
+	USART_DRIVER_PARITY_DEFAULT=0,				  	/*Parity mode selection can be ignored*/
+	USART_DRIVER_PARITY_EVEN=0,						/*Parity mode selection set to even*/
+	USART_DRIVER_PARITY_ODD=1						/*Parity mode selection set to odd*/
 }USART_Driver_Parity_Config;
 
 typedef enum
@@ -97,18 +97,18 @@ typedef enum
 
 typedef enum
 {
-	USART_DRIVER_RX_PINOUT_DEFAULT 	= 0x00,				/*The reception is not used so the pin out is to be ignored*/
-	USART_DRIVER_RX_PINOUT_PAD0		= 0x00,				/*Use the pin mapped to PAD0*/
-	USART_DRIVER_RX_PINOUT_PAD1 	= 0x01,				/*Use the pin mapped to PAD1*/
-	USART_DRIVER_RX_PINOUT_PAD2 	= 0x02,				/*Use the pin mapped to PAD2*/
-	USART_DRIVER_RX_PINOUT_PAD3 	= 0x03,				/*Use the pin mapped to PAD3*/
+	USART_DRIVER_RX_PINOUT_DEFAULT 	= 0x00,			/*The reception is not used so the pin out is to be ignored*/
+	USART_DRIVER_RX_PINOUT_PAD0		= 0x00,			/*Use the pin mapped to PAD0*/
+	USART_DRIVER_RX_PINOUT_PAD1 	= 0x01,			/*Use the pin mapped to PAD1*/
+	USART_DRIVER_RX_PINOUT_PAD2 	= 0x02,			/*Use the pin mapped to PAD2*/
+	USART_DRIVER_RX_PINOUT_PAD3 	= 0x03,			/*Use the pin mapped to PAD3*/
 }USART_Driver_RX_PinOut_Config;
 
 typedef enum
 {
-	USART_DRIVER_TX_PINOUT_DEFAULT	= 0x00,				/*The transmission is not used so the pin out is to be ignored*/
-	USART_DRIVER_TX_PINOUT_PAD0 	= 0x00,				/*Use the pin mapped to PAD0*/
-	USART_DRIVER_TX_PINOUT_PAD2		= 0x01				/*Use the pin mapped to PAD2*/
+	USART_DRIVER_TX_PINOUT_DEFAULT	= 0x00,			/*The transmission is not used so the pin out is to be ignored*/
+	USART_DRIVER_TX_PINOUT_PAD0 	= 0x00,			/*Use the pin mapped to PAD0*/
+	USART_DRIVER_TX_PINOUT_PAD2		= 0x01			/*Use the pin mapped to PAD2*/
 }USART_Driver_TX_PinOut_Config;
 
 typedef enum
@@ -118,6 +118,12 @@ typedef enum
 	USART_DRIVER_8X_OVER_SAMPLING_ARITH  = 0x02,		/*8x over-sampling using arithmetic baud rate generation.*/
 	USART_DRIVER_8X_OVER_SAMPLING_FRACT  = 0x03,		/*8x over-sampling using fractional baud rate generation.*/
 }USART_Driver_SampleRate_Config;
+
+typedef enum
+{
+	USART_DRIVER_MSB_FIRST,			/*Select the USART instance from the SERCOM 0*/
+	USART_DRIVER_LSB_FIRST,			/*Select the USART instance from the SERCOM 1*/
+}USART_Driver_Data_Order;
 
 typedef enum
 {
@@ -142,6 +148,7 @@ typedef struct
 	const USART_Driver_RX_PinOut_Config	USART_Driver_RX_PinOut;
 	const USART_Driver_StopBitMode_Config USART_Stop_bit_select;
 	const USART_Driver_SampleRate_Config USART_Oversampling_mode;
+	const USART_Driver_Data_Order USART_Payload_Data_Order;
 }USART_Driver_Setup_Type;
 
 extern USART_Driver_Setup_Type* USART_SETUP;

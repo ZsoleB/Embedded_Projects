@@ -91,25 +91,24 @@ void USART_Driver_Init()
 		USART_Driver_Instances eSelectedInstance = USART_SETUP[USART_index].USART_Instance;
 
 		USART_Driver_SWReset(USART_index);
-		USART_Driver_Stop(USART_index);
 
 		SERCOM_DRIVER_Registers[eSelectedInstance]->SERCOM_DRIVER_CTRLB |= USART_SETUP[USART_index].USART_Word_length|
 																		(USART_SETUP[USART_index].USART_Stop_bit_select<<0x06)|
 																		(USART_SETUP[USART_index].USART_Parity_selection<<0x0D)|
 																		(USART_SETUP[USART_index].USART_Transmitter_enable<<0x10)|
 																		(USART_SETUP[USART_index].USART_Receiver_enable<<0x11);
+                                    
 
 		SERCOM_DRIVER_Registers[eSelectedInstance]->SERCOM_DRIVER_CTRLA |= (USART_DRIVER_INT_CLOCK)|(USART_DRIVER_ASYNCH_COMM)|
 																		(USART_SETUP[USART_index].USART_Oversampling_mode<<0x0D)|
 																		(USART_SETUP[USART_index].USART_Driver_TX_PinOut<<0x10)|
 																		(USART_SETUP[USART_index].USART_Driver_RX_PinOut<<0x14)|
-																		(USART_SETUP[USART_index].USART_Parity_control_enable<<0x18);
+																		(USART_SETUP[USART_index].USART_Parity_control_enable<<0x18)|
+																		(USART_SETUP[USART_index].USART_Payload_Data_Order<<0x1E);
 
-
-		USART_Driver_Set_Baudrate(USART_index);
-		USART_Driver_Start(USART_index);
+	USART_Driver_Set_Baudrate(USART_index);
+    USART_Driver_Start(eSelectedInstance);
 	}
-
 }
 
 void  USART_Driver_Set_Baudrate(uint8 USART_setup_nr)
@@ -119,6 +118,8 @@ void  USART_Driver_Set_Baudrate(uint8 USART_setup_nr)
 	uint32 tmp = 0;
 	uint32 result = 0;
 	uint8 OperatingMode = 0x00;
+
+  	USART_Driver_Instances eSelectedInstance = USART_SETUP[USART_setup_nr].USART_Instance;
 
 	/*For the Asynchronous Fractional mode the BAUD Register Value Calculation formula was used from the Baud Rate Equation table.
 
@@ -170,11 +171,11 @@ void  USART_Driver_Set_Baudrate(uint8 USART_setup_nr)
 
 		result = MANTISA|(FRACTION << 0x0D);
 
-		SERCOM_DRIVER_Registers[USART_setup_nr]->SERCOM_DRIVER_BAUD = result;
+		SERCOM_DRIVER_Registers[eSelectedInstance]->SERCOM_DRIVER_BAUD = result;
 	}
 	else if(0x01 == OperatingMode)
 	{
-		SERCOM_DRIVER_Registers[USART_setup_nr]->SERCOM_DRIVER_BAUD = (uint16)tmp;
+		SERCOM_DRIVER_Registers[eSelectedInstance]->SERCOM_DRIVER_BAUD = (uint16)tmp;
 	}
 	else
 	{
@@ -185,15 +186,16 @@ void  USART_Driver_Set_Baudrate(uint8 USART_setup_nr)
 uint8 USART_Driver_Receive_Char(USART_Driver_Instances USART_setup_nr)
 {
 	uint8 Payload=0x00;
-	while((USART_Driver_GetComStatus(USART_setup_nr,USART_DRIVER_FLAG_STATUS_RXC)) == _FAILED_);
+
+  	while((USART_Driver_GetComStatus(USART_setup_nr,USART_DRIVER_FLAG_STATUS_RXC)) == _FAILED_){}
 	Payload = (uint8)(SERCOM_DRIVER_Registers[USART_setup_nr]->SERCOM_DRIVER_DATA);
 	return Payload;
 }
 
 void USART_Driver_Send_Char(USART_Driver_Instances USART_setup_nr, uint8 data)
 {
-	while((USART_Driver_GetComStatus(USART_setup_nr,USART_DRIVER_FLAG_STATUS_DRE)) == _FAILED_);
-	SERCOM_DRIVER_Registers[USART_setup_nr]->SERCOM_DRIVER_DATA = data;
+	while((USART_Driver_GetComStatus(USART_setup_nr,USART_DRIVER_FLAG_STATUS_DRE)) == _FAILED_){}
+	SERCOM_DRIVER_Registers[USART_setup_nr]->SERCOM_DRIVER_DATA = (uint16_t)data;
 }
 
 void USART_Driver_Send_Str(uint8 USART_setup_nr,char* Msg)
@@ -214,8 +216,8 @@ void USART_Driver_Start(uint8 USART_setup_nr)
 	Enabling and disabling the SERCOM (CTRLA.ENABLE) requires synchronization. 
 	When written, the SYNCBUSY.ENABLE bit will be set until synchronization is complete.	
 	*/
-	while((0x00 != (SERCOM_DRIVER_Registers[USART_setup_nr]->SERCOM_DRIVER_CTRLA & USART_DRIVER_ENABLE)) ||
-		  (0x00 != (SERCOM_DRIVER_Registers[USART_setup_nr]->SERCOM_DRIVER_SYNCBUSY & USART_DRIVER_SYNCH_ENABLE)))
+
+	while(0x00 != (SERCOM_DRIVER_Registers[USART_setup_nr]->SERCOM_DRIVER_SYNCBUSY & USART_DRIVER_SYNCH_ENABLE))
 	{
 		/*Wait until Synchronization is finished*/
 	}
@@ -262,16 +264,18 @@ uint8 USART_Driver_GetErrStatus(USART_Driver_Instances USART_setup_nr, USART_Dri
 
 void USART_Driver_SWReset(USART_Driver_Instances USART_setup_nr)
 {
+  USART_Driver_Instances eSelectedInstance = USART_SETUP[USART_setup_nr].USART_Instance;
+
 	/*Request SW Reset in order to reset the SERCOM registers*/
-	SERCOM_DRIVER_Registers[USART_setup_nr]->SERCOM_DRIVER_CTRLA |= USART_DRIVER_SWRESET;
+	SERCOM_DRIVER_Registers[eSelectedInstance]->SERCOM_DRIVER_CTRLA |= USART_DRIVER_SWRESET;
 
 	/*
 	Wait until the SW reset (bit in the Synch. busy register is set to 0) is finished.
 	Due to synchronization, there is a delay from writing CTRLA.SWRST until the reset is complete. CTRLA.SWRST and
 	SYNCBUSY.SWRST will both be cleared when the reset is complete.
 	*/
-	while((0x00 != (SERCOM_DRIVER_Registers[USART_setup_nr]->SERCOM_DRIVER_CTRLA & USART_DRIVER_SWRESET)) ||
-		  (0x00 != (SERCOM_DRIVER_Registers[USART_setup_nr]->SERCOM_DRIVER_SYNCBUSY & USART_DRIVER_SYNCH_SWRST)))
+	while((0x00 != (SERCOM_DRIVER_Registers[eSelectedInstance]->SERCOM_DRIVER_CTRLA & USART_DRIVER_SWRESET)) ||
+		  (0x00 != (SERCOM_DRIVER_Registers[eSelectedInstance]->SERCOM_DRIVER_SYNCBUSY & USART_DRIVER_SYNCH_SWRST)))
 	{
 		/*Wait until Synchronization is finished*/
 	}

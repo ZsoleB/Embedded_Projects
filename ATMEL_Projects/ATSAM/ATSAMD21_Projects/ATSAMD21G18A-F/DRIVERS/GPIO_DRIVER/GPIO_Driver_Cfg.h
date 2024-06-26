@@ -12,8 +12,8 @@
 #include "GPIO_Driver.h"
 
 #define GPIO_DRIVER_USE_IOBUS 						NOK
-#define GPIO_DRIVER_GPIOA 				  			OK
-#define GPIO_DRIVER_GPIOB 				  			NOK
+#define GPIO_DRIVER_GPIOA 				  			NOK
+#define GPIO_DRIVER_GPIOB 				  			OK
 #define GPIO_DRIVER_INSTANCE_NUM 					((uint32)0x01)
 
 #endif /* GPIO_DRIVER_CFG_H_ */
